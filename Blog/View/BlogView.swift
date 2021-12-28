@@ -24,19 +24,18 @@ struct BlogView: View {
                          content: { image in
                             image
                                 .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 350, height: 200)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(maxWidth:.infinity)
                          })
-                    .padding(.vertical,20)
             } else {
                 PlaceholderImageView()
             }
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 10) {
                 Divider().frame(height: 1.5).background(Color.black)
                 Text(post.title ?? "")
                     .foregroundColor(.black)
-                    .font(.system(size: 18,weight: .bold))
+                    .font(.system(size: 25,weight: .semibold))
                 Divider().frame(height: 1.5).background(Color.black)
                 Text(post.postDescription ?? "N/A")
                     .font(.system(size: 12,weight: .semibold))
