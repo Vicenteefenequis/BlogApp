@@ -8,15 +8,15 @@
 import Foundation
 import Combine
 
-protocol PostViewModel {
+protocol BlogViewModel {
     func getPosts()
 }
 
 
-class PostViewModelImpl : ObservableObject, PostViewModel {
+class BlogViewModelImpl : ObservableObject, BlogViewModel {
     private let service: BlogService
     
-    private(set) var posts = [Post]()
+    private(set) var posts = [Blog]()
     private var cancellables = Set<AnyCancellable>()
     
     @Published private(set) var state: ResultState = .loading
