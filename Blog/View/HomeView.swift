@@ -22,6 +22,7 @@ struct HomeView: View {
             case .success(content: let posts):
                 NavigationView {
                     VStack {
+                        HeaderBlog()
                         List(posts) { item in
                             BlogView(post: item)
                                 .onTapGesture {
@@ -36,7 +37,6 @@ struct HomeView: View {
                             viewModel.getPosts()
                         }
                     }
-                    .padding(.top,10)
                     .navigationBarHidden(true)
                 }
             }
@@ -53,5 +53,17 @@ struct HomeView: View {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
+    }
+}
+
+struct HeaderBlog: View {
+    var body: some View {
+        VStack {
+            Text("This is where \n we tell stories")
+                .font(.system(size: 40))
+                .fontWeight(.bold)
+                .frame(maxWidth: .infinity,alignment: .leading)
+            Divider()
+        }.padding(.horizontal,20)
     }
 }
