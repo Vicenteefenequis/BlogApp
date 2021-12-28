@@ -10,7 +10,7 @@ import Foundation
 
 enum ResultState {
     case loading
-    case success(content: [Post])
+    case success(content: [Blog])
     case failed(error: Error)
 }
 
