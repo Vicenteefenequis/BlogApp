@@ -11,6 +11,7 @@ struct HomeView: View {
     
     @Environment(\.openURL) var openUrl
     @StateObject var viewModel = BlogViewModelImpl(service: BlogServiceImpl())
+    @State private var showMenu: Bool = false
     
     var body: some View {
         Group {
@@ -21,23 +22,37 @@ struct HomeView: View {
                 ErrorView(error: error, handler: viewModel.getPosts)
             case .success(content: let posts):
                 NavigationView {
-                    VStack {
-                        HeaderBlog()
-                        List(posts) { item in
-                            BlogView(post: item)
-                                .onTapGesture {
-                                    load(url: item.image)
-                                }
+                    ZStack {
+                        
+                        VStack {
+                            HeaderBlog(showMenu: self.$showMenu)
+                            List(posts) { item in
+                                BlogView(post: item)
+                                    .onTapGesture {
+                                        load(url: item.image)
+                                    }
+                            }
+                            .onAppear() {
+                                UITableView.appearance().backgroundColor = UIColor.clear
+                                UITableViewCell.appearance().backgroundColor = UIColor.clear
+                            }
+                            .refreshable {
+                                viewModel.getPosts()
+                            }
                         }
-                        .onAppear() {
-                            UITableView.appearance().backgroundColor = UIColor.clear
-                            UITableViewCell.appearance().backgroundColor = UIColor.clear
+                        
+                        GeometryReader { _ in
+                            HStack {
+                                SideMenuView(showMenu: self.$showMenu)
+                                    .offset(x: showMenu ? 0 : UIScreen.main.bounds.width)
+                                    
+                            }
                         }
-                        .refreshable {
-                            viewModel.getPosts()
-                        }
+                        
                     }
+                    
                     .navigationBarHidden(true)
+                   
                 }
             }
         }.onAppear(perform: viewModel.getPosts)
@@ -57,13 +72,29 @@ struct HomeView_Previews: PreviewProvider {
 }
 
 struct HeaderBlog: View {
+    
+    @Binding var showMenu: Bool
+    
+    
     var body: some View {
-        VStack {
-            Text("This is where \n we tell stories")
-                .font(.system(size: 40))
-                .fontWeight(.bold)
+            VStack {
+                Button {
+                    self.showMenu.toggle()
+                } label : {
+                    Image(systemName: "text.justify")
+                        .font(.title)
+                        .foregroundColor(.black)
+                }
                 .frame(maxWidth: .infinity,alignment: .leading)
-            Divider()
-        }.padding(.horizontal,20)
+                Text("This is where \n we tell stories")
+                    .font(.system(size: 40))
+                    .fontWeight(.bold)
+                    .frame(maxWidth: .infinity,alignment: .leading)
+                    .padding(.top,32)
+               
+                Divider()
+            }
+            .padding(.horizontal,20)
+            
     }
 }
