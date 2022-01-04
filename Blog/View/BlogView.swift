@@ -38,7 +38,8 @@ struct BlogView: View {
                     .font(.system(size: 25,weight: .semibold))
                 Divider().frame(height: 1.5).background(Color.black)
                 Text(post.postDescription ?? "N/A")
-                    .font(.system(size: 12,weight: .semibold))
+                    .font(.system(size: 18,weight: .light))
+                    .lineLimit(3)
             }
         }
     }
@@ -46,10 +47,7 @@ struct BlogView: View {
 
 struct PlaceholderImageView: View {
     var body: some View {
-        Image(systemName: "photo.fill")
-            .foregroundColor(.white)
-            .background(Color.gray)
-           
+       ProgressView()
     }
 }
 
