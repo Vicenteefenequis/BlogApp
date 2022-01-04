@@ -9,9 +9,10 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @Environment(\.openURL) var openUrl
+    
     @StateObject var viewModel = BlogViewModelImpl(service: BlogServiceImpl())
     @State private var showMenu: Bool = false
+    @State var isFullNewsTapped = false
     
     var body: some View {
         Group {
@@ -23,14 +24,24 @@ struct HomeView: View {
             case .success(content: let posts):
                 NavigationView {
                     ZStack {
-                        
                         VStack {
                             HeaderBlog(showMenu: self.$showMenu)
-                            List(posts) { item in
-                                BlogView(post: item)
-                                    .onTapGesture {
-                                        load(url: item.image)
-                                    }
+                            List(posts) { post in
+                                BlogView(post: post)
+                                
+                                NavigationLink(
+                                    destination:FullNewsView(post:post),
+                                    isActive: $isFullNewsTapped
+                                ) {
+                                    EmptyView()
+                                    
+                                }
+                                .frame(width: 0, height: 0)
+                                .hidden()
+                                
+                            }
+                            .onTapGesture {
+                                isFullNewsTapped.toggle()
                             }
                             .onAppear() {
                                 UITableView.appearance().backgroundColor = UIColor.clear
@@ -45,24 +56,21 @@ struct HomeView: View {
                             HStack {
                                 SideMenuView(showMenu: self.$showMenu)
                                     .offset(x: showMenu ? 0 : UIScreen.main.bounds.width)
-                                    
+                                
                             }
                         }
+                        
+                        
                         
                     }
                     
                     .navigationBarHidden(true)
-                   
+                    
                 }
             }
         }.onAppear(perform: viewModel.getPosts)
     }
     
-    func load(url: String?) {
-        guard let link = url,
-              let url = URL(string: link) else  { return }
-        openUrl(url)
-    }
 }
 
 struct HomeView_Previews: PreviewProvider {
@@ -77,24 +85,24 @@ struct HeaderBlog: View {
     
     
     var body: some View {
-            VStack {
-                Button {
-                    self.showMenu.toggle()
-                } label : {
-                    Image(systemName: "text.justify")
-                        .font(.title)
-                        .foregroundColor(.black)
-                }
-                .frame(maxWidth: .infinity,alignment: .leading)
-                Text("This is where \n we tell stories")
-                    .font(.system(size: 40))
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity,alignment: .leading)
-                    .padding(.top,32)
-               
-                Divider()
+        VStack {
+            Button {
+                self.showMenu.toggle()
+            } label : {
+                Image(systemName: "text.justify")
+                    .font(.title)
+                    .foregroundColor(.black)
             }
-            .padding(.horizontal,20)
+            .frame(maxWidth: .infinity,alignment: .leading)
+            Text("This is where \n we tell stories")
+                .font(.system(size: 40))
+                .fontWeight(.bold)
+                .frame(maxWidth: .infinity,alignment: .leading)
+                .padding(.top,32)
             
+            Divider()
+        }
+        .padding(.horizontal,20)
+        
     }
 }
