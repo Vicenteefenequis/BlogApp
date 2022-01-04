@@ -25,7 +25,6 @@ struct FullNewsView: View {
                     Image(systemName: "photo")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: .infinity)
                         .foregroundColor(.white.opacity(0.7))
                         
                 }
